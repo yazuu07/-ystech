@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/itonatocuescano/CSS/fonts.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(to right, #B8860B, #000);
+            color: black;
+        }
+        .container {
+            max-width: 400px;
+            margin: 80px auto; /* Centered */
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+        }
+        .profile-detail {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .profile-detail label {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .edit-button button {
+            background-color: #B8860B;
+            transition: 0.3s ease;
+        }
+        .edit-button button:hover {
+            background-color: #DAA520;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="bg-black shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16 relative">
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 top-0 p-4">
+                <button id="menuButton" class="text-white text-xl">☰</button>
+                <div id="menuDropdown" class="absolute mt-2 w-48 bg-stone-800 text-white rounded shadow-lg hidden">
+                    <a href="camera.html" class="block px-4 py-2 text-white hover:bg-stone-700">Camera</a>
+                    <a href="user_profile.html" class="block px-4 py-2 text-white hover:bg-stone-700">Profile</a>
+                    <a href="user_gallery.html" class="block px-4 py-2 text-white hover:bg-stone-700">Gallery</a>
+                    <a href="login.html" class="block px-4 py-2 text-white hover:bg-stone-700">Logout</a>
+                </div>
+            </div>
+
+            <!-- Logo in the Center -->
+            <div class="mx-auto">
+                <a href="camera.html">
+                    <img src="images/logo.jpg" alt="Logo" class="h-10">
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Profile Content -->
+<div class="container w-80 p-6 bg-white shadow-lg rounded-lg">
+
+    
+        <div class="text-red-500 mb-4 text-center"> <?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?> </div>
+    
+        <div class="text-green-500 mb-4 text-center"> <?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?> </div>
+    
+
+    <div class="text-center">
+    <img src="lledo.png" 
+         alt="Profile Photo" 
+         class="profile-photo border-2 border-gray-400 rounded-full w-32 h-32 object-cover">
+</div>
+
+
+    <div class="profile-detail mt-4">
+        <h2 class="text-lg font-semibold"><label>Name:</label></h2>
+        <p class="text-gray-700"><?= htmlspecialchars($user['user']); ?></p>
+    </div>
+
+    <div class="profile-detail mt-2">
+        <h2 class="text-lg font-semibold"><label>Email:</label></h2>
+        <p class="text-gray-700"><?= htmlspecialchars($user['email']); ?></p>
+    </div>
+
+    <div class="profile-detail mt-2">
+        <h2 class="text-lg font-semibold"><label>Contact No:</label></h2>
+        <p class="text-gray-700"><?= htmlspecialchars($user['contact_number']); ?></p>
+    </div>
+
+    <div class="text-center mt-4">
+        <button onclick="window.location.href='edit_profile.html'" 
+                class="px-4 py-2 bg-yellow-600 rounded text-white hover:bg-yellow-700 transition">
+            Edit Profile
+        </button>
+    </div>
+</div>
+
+<script>
+document.getElementById("menuButton").addEventListener("click", function () {
+    var dropdown = document.getElementById("menuDropdown");
+    dropdown.classList.toggle("hidden");
+});
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function (event) {
+    var dropdown = document.getElementById("menuDropdown");
+    var button = document.getElementById("menuButton");
+
+    if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+        dropdown.classList.add("hidden");
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>'s Gallery</title>
+    <!-- Include Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="icon" type="image/png"
+        href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxRJkf3Hh_OcH9AJn4SVH_EXHje0n5lJFhNw&s">
+
+    <!-- Include Flatpickr JS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/itonatocuescano/CSS/fonts.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #B8860B, #000);
+            color: white;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .dropdown button {
+            background-color: #000;
+            color: white;
+            padding: 8px 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .dropdown button:hover {
+            background-color: #000;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            min-width: 160px;
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #444;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #555;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            /* Semi-transparent black */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="bg-black text-white fixed top-0 w-full shadow-lg z-50">
+        <div class="dropdown">
+            <button>☰</button>
+            <div class="dropdown-content bg-stone-800">
+                <a href="camera.html">Camera</a>
+                <a href="user_profile.html">Profile</a>
+                <a href="user_gallery.html">Gallery</a>
+                <a href="login.html">Logout</a>
+            </div>
+        </div>
+        <div class="container mx-auto px-4 py-4 flex justify-center items-center">
+            <div class="flex-shrink-0">
+                <a href="user_gallery.html"><img src="images/logo.jpg" alt="Company Logo" class="mx-auto"
+                        style="width:200px;"></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 mt-20 w-full">
+        <!-- Calendar -->
+        <div class="calendar text-black text-center mb-6 w-full sm:w-auto">
+            <h2 class="text-lg font-semibold mb-2">Select a Date</h2>
+            <input type="date" id="date-picker" class="border border-gray-400 p-2 rounded w-full sm:w-auto">
+        </div>
+
+        <!-- Gallery -->
+        <div class="bg-stone-200 p-6 rounded shadow text-black w-full max-w-4xl text-center">
+            <h2 class="text-xl font-semibold mb-4">Uploaded Images</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" id="gallery">
+                <!-- Images will be injected here dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Image Modal -->
+    <div class="modal" id="modal">
+        <button class="close-btn" onclick="closeModal()">×</button>
+        <img id="modal-image" src="" alt="Full Image">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const images = [
+                { src: './lledo.png', uploadedAt: '2025-02-20' },
+                { src: './images/photo2.jpg', uploadedAt: '2025-02-21' },
+                { src: './images/photo3.jpg', uploadedAt: '2025-02-22' }
+            ];
+
+            const gallery = document.getElementById('gallery');
+            const datePicker = document.getElementById('date-picker');
+            const today = new Date().toISOString().split('T')[0];
+            datePicker.value = today;
+
+            function renderGallery(selectedDate) {
+                gallery.innerHTML = '';
+                const filteredImages = images.filter(image => image.uploadedAt === selectedDate);
+                if (filteredImages.length) {
+                    filteredImages.forEach(image => {
+                        const imgElement = `
+                            <div class="image-container" data-uploaded-at="${image.uploadedAt}">
+                                <img src="${image.src}" alt="Uploaded Image" onclick="openModal('${image.src}')" class="w-full rounded shadow-lg cursor-pointer">
+                            </div>`;
+                        gallery.innerHTML += imgElement;
+                    });
+                } else {
+                    gallery.innerHTML = `<p class="text-gray-600">No images uploaded on this date.</p>`;
+                }
+            }
+
+            datePicker.addEventListener('change', function () {
+                renderGallery(this.value);
+            });
+
+            renderGallery(today);
+        });
+
+        function openModal(imagePath) {
+            const modal = document.getElementById('modal');
+            const modalImage = document.getElementById('modal-image');
+            modal.style.display = 'flex';
+            modalImage.src = imagePath;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
