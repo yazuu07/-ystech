@@ -279,21 +279,26 @@ logo.src = "images/logo.jpg"; // Update to your logo's path
 
 // Access camera
 // Access front camera and apply mirror effect for mobile devices
+// Access the front camera and apply mirror effect
 navigator.mediaDevices
     .getUserMedia({ 
         video: { 
-            facingMode: { exact: "user" } // Ensures front-facing camera
+            facingMode: "user" // 'user' targets the front camera
         } 
     })
     .then((stream) => {
         video.srcObject = stream;
-        
-        // Apply mirror effect by scaling the video horizontally
-        if (window.innerWidth <= 768) { // Check if device is mobile (screen width <= 768px)
-            video.style.transform = "scaleX(-1)"; // Mirror the video
+
+        // Apply mirror effect on front camera for mobile devices
+        if (window.innerWidth <= 768) { // Check if the device is mobile
+            video.style.transform = "scaleX(1)"; // Mirror the video for selfie-like effect
         }
     })
-    .catch((err) => console.error("Camera access denied:", err));
+    .catch((err) => {
+        console.error("Error accessing the camera:", err);
+        // Optionally, you can fall back to the rear camera or show an error message
+        alert("Unable to access the front camera.");
+    });
 
 // Fetch location data
 navigator.geolocation.getCurrentPosition(
